@@ -17,22 +17,9 @@ class EmailService:
         try:
             logging.info(f"Sending executive summary to user: {user.email}")
             
-            subject = f"Your morning report - {datetime.now().strftime('%Y-%m-%d')}"
+            subject = self.generate_email_subject()
             
-            # Create HTML email content
-            html_content = f"""
-            <html>
-            <body>
-                <h2>Executive Summary: {datetime.now().strftime('%Y-%m-%d')}</h2>
-                <hr>
-                <div style="white-space: pre-wrap; font-family: Arial, sans-serif;">
-                {summary}
-                </div>
-                <hr>
-                <p><em>This report was automatically generated based on your interests.</em></p>
-            </body>
-            </html>
-            """
+            html_content = self.generate_email_content(summary)
             
             # Send email
             self.yag.send(
@@ -56,3 +43,25 @@ class EmailService:
             logging.info("Email connection closed")
         except Exception as e:
             logging.error(f"Error closing email connection: {e}")
+
+    def generate_email_subject(self) -> str:
+        """Generate email subject"""
+        return f"Your morning report - {datetime.now().strftime('%Y-%m-%d')}"
+    
+    def generate_email_content(self, summary: str) -> str:
+        """Generate email content"""
+        return f"""
+        <html>
+        <body>
+            <h2>Executive Summary: {datetime.now().strftime('%Y-%m-%d')}</h2>
+            <hr>
+            <div style="white-space: pre-wrap; font-family: Arial, sans-serif;">
+            {summary}
+            </div>
+            <hr>
+            <p><em>This report was automatically generated based on your interests.</em></p>
+        </body>
+        </html>
+        """
+
+

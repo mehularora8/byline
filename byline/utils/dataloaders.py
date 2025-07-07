@@ -9,10 +9,10 @@ def load_test_users(json_file_path: str) -> list:
     users = []
     for email, user_data in data.items():
         user_interests = []
-        for topic in user_data.get("topics", []):
+        for interest in user_data.get("interests", []):
             user_interests.append(UserInterest(
-                interest=topic,
-                subinterests=user_data.get("keywords", [])
+                interest=interest.get("interest"),
+                subinterests=interest.get("subinterests", [])
             ))
         
         users.append(User(
