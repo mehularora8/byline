@@ -1,7 +1,10 @@
 {
     "aroramehul8@gmail.com": {
-        "topics": ["AI Research Labs"],
-        "keywords": ["Anthropic"],
-        "domains": []
+        "interests": [
+            {
+                "interest": "AI Research Labs",
+                "subinterests": ["Anthropic", "OpenAI"]
+            }
+        ]
     }
 }

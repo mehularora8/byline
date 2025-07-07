@@ -4,6 +4,7 @@ from typing import Dict, Any
 from openai import OpenAI
 from .exa import ExaSearch
 from byline.models.user_models import UserInterest
+from byline.services.templates.agent_prompt import generate_agent_prompt
 
 class ExecutiveSummaryAgent:
     """LLM agent using OpenAI GPT-4 with function calling"""
@@ -14,7 +15,6 @@ class ExecutiveSummaryAgent:
         self.exa_search = ExaSearch(exa_api_key)
         logging.info(f"ExecutiveSummaryAgent initialized with OpenAI API key: {openai_api_key[:8]}...")
         
-        # Define the Exa search tool
         self.tools = [{
             "type": "function",
             "name": "search_web",
@@ -47,30 +47,7 @@ class ExecutiveSummaryAgent:
         """Chat with the agent using function calling for search"""
         logging.info(f"create_executive_summary called with user_interest: {user_interest}")
         
-        # Create system message with user interests context
-        prompt_message = f"""Your job is to provide the user an executive summary to keep on top of their interests in the last day. 
-        
-        ## User Interests
-        The user has the following interests, with interests in these specific keywords, and likes the following domains:
-        {user_interest.to_dict()}.
-
-        You should try to find information on the user's domains, but that is not an exhaustive list of domains you should search.
-        
-        ## Functions
-        You will use the search_web function to find relevant information and provide helpful responses based on their interests.
-
-        ## Output
-        Your response should contain all the interests in the user_interest object, with 1-3 bullet points if information is available. 
-        Your tone should be authoritative and informative. Keep it short and concise.
-        
-        ## Output Format
-        Respond in HTML format. For each topic, you should have a heading and a list of bullet points.
-        <h3>TOPIC</h3>
-        <ul>
-            <li>1-3 bullet points about this topic if information is available.</li>
-            <li>If no information is available, say "No information available"</li>
-        </ul>
-        """
+        prompt_message = generate_agent_prompt(user_interest)
         
         messages = [
             {"role": "user", "content": prompt_message}
@@ -97,17 +74,14 @@ class ExecutiveSummaryAgent:
             
                 logging.info(f"Processing tool call: {message.name}")
                 if message.name == "search_web":
-                    # Parse function arguments
                     function_args = json.loads(message.arguments)
                     query = function_args.get("query")
                     num_results = function_args.get("num_results", 3)
                     
                     logging.info(f"Executing search_web with args: {function_args}")
                     
-                    # Execute search
                     search_results = self.search_web(query, num_results)
                     
-                    # Add tool response
                     messages.append({
                         "call_id": message.call_id,
                         "type": "function_call_output",
