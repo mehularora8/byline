@@ -1,0 +1,62 @@
+name: Scheduled Python Script
+
+on:
+  schedule:
+    - cron: '0 14 * * *'  # 7 AM Pacific Daylight Time (2 PM UTC)
+  workflow_dispatch:  # Allows manual triggering for testing
+
+jobs:
+  run-python-script:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'  # Change to your preferred Python version
+          
+      - name: Cache pip dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+            
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          
+      - name: Run Python script
+        run: python exec.py
+        env:
+          # Your specific secrets
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SENDER_PASSWORD: ${{ secrets.SENDER_PASSWORD }}
+          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          EXA_API_KEY: ${{ secrets.EXA_API_KEY }}
+          
+      - name: Upload artifacts (optional)
+        if: always()  # Runs even if the script fails
+        uses: actions/upload-artifact@v3
+        with:
+          name: script-output-${{ github.run_number }}
+          path: |
+            logs/
+            output/
+            *.log
+            *.csv
+            *.json
+          retention-days: 30
+          
+      - name: Notify on failure (optional)
+        if: failure()
+        run: |
+          echo "::error::Python script execution failed!"
+          echo "Check the logs above for details."
