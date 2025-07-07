@@ -2,8 +2,8 @@ import logging
 import json
 from typing import Dict, Any
 from openai import OpenAI
-from exa import ExaSearch
-from models import UserInterest
+from .exa import ExaSearch
+from byline.models.user_models import UserInterest
 
 class ExecutiveSummaryAgent:
     """LLM agent using OpenAI GPT-4 with function calling"""
