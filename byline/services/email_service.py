@@ -1,7 +1,7 @@
 import yagmail
 import logging
 from datetime import datetime
-from models import User
+from byline.models.user_models import User
 
 class EmailService:
     """Service to send executive summary reports via email"""

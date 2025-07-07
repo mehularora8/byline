@@ -8,7 +8,7 @@ def setup_logging():
         level=logging.INFO,
         format='%(asctime)s - %(levelname)s - %(message)s',
         handlers=[
-            logging.FileHandler('executive_summary.log'),
+            logging.FileHandler('executive_summary.log', mode='w'),
             logging.StreamHandler()  # Also print to console
         ]
     )

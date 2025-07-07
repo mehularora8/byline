@@ -1,6 +1,6 @@
 import logging
 from typing import List
-from models import User, UserInterest
+from byline.models.user_models import User, UserInterest
 from supabase import create_client, Client
 
 class SupabaseClient:
