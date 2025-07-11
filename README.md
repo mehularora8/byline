@@ -1,6 +1,6 @@
 # Byline
 
-An AI agent create personalized newsletters based on user interests.
+An AI agent to keep up with research based on your interests.
 
 ⚠️ Under Active Development ⚠️
 TODOs:
