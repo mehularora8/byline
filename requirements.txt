@@ -2,4 +2,6 @@ requests>=2.31.0
 openai>=1.0.0
 yagmail>=0.15.293
 python-dotenv>=1.0.0
-supabase>=2.0.0 
+supabase>=2.0.0
+arxiv>=2.0.0
+PyPDF2>=3.0.0 
