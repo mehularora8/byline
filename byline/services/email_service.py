@@ -46,20 +46,18 @@ class EmailService:
 
     def generate_email_subject(self) -> str:
         """Generate email subject"""
-        return f"Your morning report - {datetime.now().strftime('%Y-%m-%d')}"
+        return f"[Byline Update] | {datetime.now().strftime('%Y-%m-%d')}"
     
     def generate_email_content(self, summary: str) -> str:
         """Generate email content"""
         return f"""
         <html>
         <body>
-            <h2>Executive Summary: {datetime.now().strftime('%Y-%m-%d')}</h2>
-            <hr>
+            <h2>Research Summary</h2>
+            <hr/>
             <div style="white-space: pre-wrap; font-family: Arial, sans-serif;">
             {summary}
             </div>
-            <hr>
-            <p><em>This report was automatically generated based on your interests.</em></p>
         </body>
         </html>
         """

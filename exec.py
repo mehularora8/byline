@@ -17,7 +17,7 @@ if __name__ == "__main__":
     
     try:
         logging.info("Initializing services...")
-        agent = ExecutiveSummaryAgent(env_vars["OPENAI_API_KEY"], env_vars["EXA_API_KEY"])
+        agent = ExecutiveSummaryAgent(env_vars["OPENAI_API_KEY"])
         email_service = EmailService(env_vars["SENDER_EMAIL"], env_vars["SENDER_PASSWORD"])
 
         if not args.test:
